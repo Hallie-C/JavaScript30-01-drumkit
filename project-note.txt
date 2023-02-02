@@ -1,0 +1,100 @@
+The JavaScript skills expected to gain after this project:
+- How to play sounds 
+- CSS animations
+- Adding a class to an element which will kick in the CSS with JavaScript
+- JavaScript key code to activate key up or down event 
+- Transition end event listener.
+
+
+
+While clicking the buttons, they are scaled up with some effects by adding a class while users click:
+
+.key {
+	...
+	transition: all 0.07s; // a transition of 0.07s long for transformation or changes
+}
+
+// The add in class while users click the buttons
+.play {
+	transform: scale(1.1); // to scale up the button 
+	border-color: #ffc600;
+	box-shadow: 0 0 10px #ffc600;
+}
+
+
+Every key on the keyboard when key up or down event, there will be the key code that is associated with
+that key.
+What is data-key??
+- Data- attributes were brought about in HTML when people were just making up their own attributes.
+- There are src and class, these are standards. And then people just started making up their own.
+- The syntax is simple. "data-<info-name>" is data- attribute.
+
+- SO here the data- attribute is used to hook up the data-key code along with the data-key audio.
+So that when someone hits the key on their keyboard, we're going to find the audio element and play it.
+And we're going to find a key div and add a class of playing so it will animate itself on it.
+
+
+
+/*************** FIRST ***************/
+- First, let's focus on listening for a key up event.
+- Get whatever elements that we're listening for so we're goint to test it by listening to the window
+by adding the event listener:
+	( 
+		+ The event: 'keydown'
+		+ Callback function: function(event) {...}
+	)
+	<script>
+		window.addEventListener('keydown', function(e) {
+			console.log(e.keyCode);
+		});
+	</script>
+So we're listening for the keydown event and when that happens, the callback function will be activated 
+which will give us the event.
+
+
+
+
+/*************** SECOND ***************/
+Is there an audio element on the page that has a data-key of 65?
+
+	const audio = document.querySelector('audio[data-key="${e.keycode}"]');
+	
+We use the querySelector for one. And querySelectorAll for many.
+- Select an audio element where it had a data-key attribute.
+- Using attribute selector [data-key="${e.keycode}"]
+- If there is no audio with corresponding keyCode , we're gonna return to the function from running.
+- Or else, PLAY
+
+If we hit a key multiple times, it only plays once every so often. Because the sound might take 2 or 3 seconds 
+to get to the end. So that when we hit the audio that already played, it won't play it again.
+-> Before we play the audio, we rewind it to the start of the element. 
+-> If we hit it in succession over and over again, it will just rewind it to the start.
+
+
+
+
+/*************** THIRD ***************/
+Listen to the key for when the transition and event happens
+- Select the key element with the data-key attribute.
+- Add .playing class to add some effect when the key is hit
+ 
+	key.classList.add('playing'); // There are remove, toggle actions to deal with class
+	
+- We can use a transition end event that will fire when the thing has stopped animating itself on it.
+
+** What is the click event?
+Click event is when you click something and it will fire off the event and say "Somebody clicked me".
+** What is the transition end event?
+We also have event in JavaScript that say "I didn't get clicked but I was transitioned
+
+- Select all the keys on the page because we want to listen for it on each one which will return an array and 
+add an event called transition end on each one.
+* When you have an array of elements, you cannot listen on all of them, you must explicitly loop over every 
+single element and attach an event listener 'transitionend' and remove the class that create the transition.
+- There will a lot of transitions happened from the event, and we're gonna pick the longest one since after
+that all the transitions are done. If it's not the longest one then return.
+ELSE 
+remove the .playing class from the element
+	this.classList.remove('playing');
+	
+** The one way to define what 'this' refers to: 'this' always refers to whatever got called against it.
